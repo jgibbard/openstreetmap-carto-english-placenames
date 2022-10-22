@@ -1182,7 +1182,7 @@ Layer:
         (SELECT
             ST_PointOnSurface(way) AS way,
             way_area/NULLIF(POW(!scale_denominator!*0.001*0.28,2),0) AS way_pixels,
-            name
+            COALESCE(tags->'name:en', name) AS name
           FROM planet_osm_polygon
           WHERE ST_PointOnSurface(way) && !bbox!
             AND name IS NOT NULL
@@ -1203,7 +1203,7 @@ Layer:
       table: |-
         (SELECT
             way,
-            name,
+            COALESCE(tags->'name:en', name) AS name,
             CASE
               WHEN (tags->'population' ~ '^[0-9]{1,8}$') THEN (tags->'population')::INTEGER ELSE 0
             END as population,
@@ -1226,7 +1226,7 @@ Layer:
         (SELECT
             ST_PointOnSurface(way) AS way,
             way_area/NULLIF(POW(!scale_denominator!*0.001*0.28,2),0) AS way_pixels,
-            name,
+            COALESCE(tags->'name:en', name) AS name,
             admin_level,
             ref
           FROM planet_osm_polygon
@@ -1261,7 +1261,7 @@ Layer:
                 osm_id,
                 way,
                 place,
-                name,
+                COALESCE(tags->'name:en', name) AS name,
                 (
                   (CASE
                     WHEN (tags->'population' ~ '^[0-9]{1,8}$') THEN (tags->'population')::INTEGER
@@ -1295,7 +1295,7 @@ Layer:
         (SELECT
             way,
             place,
-            name
+            COALESCE(tags->'name:en', name) AS name
           FROM planet_osm_point
           WHERE place IN ('village', 'hamlet')
              AND name IS NOT NULL
@@ -1430,7 +1430,7 @@ Layer:
         (SELECT
             ST_PointOnSurface(way) AS way,
             way_area/NULLIF(POW(!scale_denominator!*0.001*0.28,2),0) AS way_pixels,
-            name,
+            COALESCE(tags->'name:en', name) AS name,
             admin_level
           FROM planet_osm_polygon
           WHERE ST_PointOnSurface(way) && !bbox!
